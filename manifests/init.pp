@@ -39,10 +39,7 @@ class collectd {
 
 	collectd::conf {
 		'Include':
-			value => [
-                              "/var/lib/puppet/modules/collectd/plugins/*.conf",
-                              "/var/lib/puppet/modules/collectd/thresholds/*.conf"
-                        ];
+			value => "/var/lib/puppet/modules/collectd/plugins/*.conf";
 	}
 
 	# add customisations for distributions here
