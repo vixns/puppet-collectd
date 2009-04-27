@@ -37,11 +37,11 @@ class collectd {
 			notify => Service['collectd'];
 	}
 
-	collectd_conf {
+	collectd::conf {
 		'Include':
 			value => [
-                          '"/var/lib/puppet/modules/collectd/thresholds/*.conf"',
-                          '"/var/lib/puppet/modules/collectd/plugins/*.conf"'
+                          "/var/lib/puppet/modules/collectd/thresholds/*.conf",
+                          "/var/lib/puppet/modules/collectd/plugins/*.conf"
                         ];
 	}
 
