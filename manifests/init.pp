@@ -30,10 +30,17 @@ class collectd {
 	}
 
 	file {
+		'/etc/collectd/':
+			ensure => 'directory',
+			mode => 0755, owner => root, group => 0,
+			require => Package['collectd'],
+	}
+
+	file {
 		'/etc/collectd/collectd.conf':
 			ensure => present,
 			mode => 0644, owner => root, group => 0,
-			require => Package['collectd'],
+			require => [Package['collectd'], File['/etc/collectd/']],
 			notify => Service['collectd'];
 	}
 
@@ -48,6 +55,15 @@ class collectd {
 			case $debianversion {
 				'etch': {
 				}
+			}
+		}
+		'redhat': {
+			file {
+				'/etc/collectd.conf':
+					ensure => 'link',
+					target => '/etc/collectd/collectd.conf',
+					require => File['/etc/collectd/collectd.conf'],
+					notify => Service['collectd'];
 			}
 		}
 		default: {
