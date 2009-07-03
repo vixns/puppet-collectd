@@ -13,50 +13,45 @@
 # /etc/collectd/collectd.conf file.
 class collectd {
 
-  libdir { ['collectd', 'collectd/plugins', 'collectd/thresholds' ]: }
+	libdir { ['collectd', 'collectd/plugins', 'collectd/thresholds' ]: }
 
-  service {'collectd':
-      ensure => running,
-             enable => true,
-             hasrestart => true,
-             pattern => collectd,
-             require => Package['collectd'];
-  }
+	package {
+		'collectd':
+			ensure => installed;
+	}
 
-  file {'/etc/collectd/collectd.conf':
-      ensure => present,
-             mode => 0644, owner => root, group => 0,
-             require => Package['collectd'],
-             notify => Service['collectd'];
-  }
+	service {
+		'collectd':
+			ensure => running,
+			enable => true,
+			hasrestart => true,
+			pattern => collectd,
+			require => Package['collectd'];
+	}
 
-  collectd::conf {'Include':
-      value => "/var/lib/puppet/modules/collectd/plugins/*.conf";
-  }
+	file {
+		'/etc/collectd/collectd.conf':
+			ensure => present,
+			mode => 0644, owner => root, group => 0,
+			require => Package['collectd'],
+			notify => Service['collectd'];
+	}
 
-# add customisations for distributions here
-  case $operatingsystem {
-    'debian': {
-      os::backported_package {"collectd":
-        ensure => latest,
-      }
-    }
-    'redhat': {
-      file {'/etc/collectd.conf':
-        ensure => 'link',
-        target => '/etc/collectd/collectd.conf',
-        require => File['/etc/collectd/collectd.conf'],
-        notify => Service['collectd'];
-      }
-      package {'collectd':
-          ensure => installed;
-      }
-    }
-    default: {
-# no changes needed
-      package {'collectd':
-          ensure => installed;
-      }
-    }
-  }
+	collectd::conf {
+		'Include':
+			value => "/var/lib/puppet/modules/collectd/plugins/*.conf";
+	}
+
+	# add customisations for distributions here
+	case $operatingsystem {
+		'debian': {
+			case $debianversion {
+				'etch': {
+				}
+			}
+		}
+		default: {
+			# no changes needed
+		}
+	}
 }
