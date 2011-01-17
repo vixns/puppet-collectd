@@ -8,12 +8,23 @@
 #
 # Parameters:
 #   namevar	- The plugin to configure.
-#   lines	- an array of lines to configure the plugin.
-define collectd::plugin($lines = "") {
-	$content = join("\t\n", $lines)
+#   lines	- an optional array of lines to configure the plugin.
+#   content	- optional plugin configuration, for cases where an array of lines would be insuffiscent.
+define collectd::plugin($lines = "", $content = "") {
+
+	if ($content == "") {
+		$pluginlines = join("\t\n", $lines)
+		$pluginconf = "LoadPlugin ${name}\n<Plugin ${name}>\n\t${pluginlines}\n</Plugin>\n"
+	} else {
+		$pluginconf = undef
+	}
+
 	file {
 		"/var/lib/puppet/modules/collectd/plugins/${name}.conf":
-			content => "LoadPlugin ${name}\n<Plugin ${name}>\n\t${content}\n</Plugin>\n",
+			content => $content ? {
+				""      => $pluginconf,
+				default => $content,
+			},
 			mode => 0644, owner => root, group => 0,
 			notify => Service['collectd'];
 	}
