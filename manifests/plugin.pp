@@ -10,22 +10,32 @@
 #   namevar	- The plugin to configure.
 #   lines	- an optional array of lines to configure the plugin.
 #   content	- optional plugin configuration, for cases where an array of lines would be insuffiscent.
-define collectd::plugin($lines = "", $content = "") {
+#   source	- same as content, but specify a puppet file source instead.
+define collectd::plugin($lines = "", $content = "", $source = "") {
 
-	if ($content == "") {
-		$pluginlines = join("\t\n", $lines)
-		$pluginconf = "LoadPlugin ${name}\n<Plugin ${name}>\n\t${pluginlines}\n</Plugin>\n"
-	} else {
-		$pluginconf = undef
-	}
-
-	file {
-		"/var/lib/puppet/modules/collectd/plugins/${name}.conf":
-			content => $content ? {
-				""      => $pluginconf,
-				default => $content,
-			},
+	file { "collectd ${name} config":
+			path => "/var/lib/puppet/modules/collectd/plugins/${name}.conf",
 			mode => 0644, owner => root, group => 0,
 			notify => Service['collectd'];
 	}
+
+	if ($lines != "") {
+		$pluginlines = join("\t\n", $lines)
+		File["collectd ${name} config"] {
+			content => "LoadPlugin ${name}\n<Plugin ${name}>\n\t${pluginlines}\n</Plugin>\n",
+		}
+	}
+
+	if ($content != "") {
+		File["collectd ${name} config"] {
+			content => $content,
+		}
+	}
+
+	if ($source != "") {
+		File["collectd ${name} config"] {
+			source => $source,
+		}
+	}
+
 }
