@@ -65,6 +65,18 @@ class collectd {
 					require => File['/etc/collectd/collectd.conf'],
 					notify => Service['collectd'];
 			}
+      case $lsbmajdistrelease {
+        "4","5": { }
+        default: {
+          file{ ["/usr/bin/collectd-nagios"]:
+            mode    => "755",
+            owner   => "root",
+            group   => "root",
+            seltype => "nagios_services_plugin_exec_t",
+			      require => Package['collectd'];
+          }
+        }
+      }
 		}
 		default: {
 			# no changes needed
