@@ -73,7 +73,7 @@ class collectd {
             owner   => "root",
             group   => "root",
             seltype => "nagios_services_plugin_exec_t",
-			      require => Package['collectd'];
+            require => Package['collectd'];
           }
         }
       }
