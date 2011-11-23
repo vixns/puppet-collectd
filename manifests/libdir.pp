@@ -5,7 +5,7 @@
 define collectd::libdir() {
 	file {
 		"/var/lib/puppet/modules/${name}":
-			source => "puppet:///collectd/empty", # recurse+purge needs empty directory as source
+			source => "puppet:///modules/collectd/empty", # recurse+purge needs empty directory as source
 			mode => 0644,
 			checksum => mtime,
 			ignore => '.ignore', # ignore the placeholder
