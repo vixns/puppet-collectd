@@ -2,9 +2,6 @@ Exec { path => '/sbin:/bin:/usr/sbin:/usr/bin' }
 
 filebucket { 'server': }
 
-import "common"
-import "collectd"
-
 include collectd
 
 resources { collectd_conf: purge => true; }
