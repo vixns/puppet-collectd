@@ -6,8 +6,8 @@
 # 
 # Parameters:
 #   namevar	- ignored, there can only be one network plugin specification per node
-#   listen	- The Listen statement's values. Can be an array for multiple interfaces.
-#   server	- The Server statement's values. Can be an array for multiple interfaces.
+#   listen	- The Listen statement's values.
+#   server	- The Server statement's values.
 #   ttl		- 1-255; set the time-to-live of sent packets.
 #   forward	- 'true' or 'false' (default); If set to true, write packets
 #   		  that were received via the network plugin to the sending sockets. 
@@ -24,8 +24,8 @@ define collectd::network($listen = '', $server = '', $ttl = '', $forward = 'fals
 	collectd::plugin{
 		'network':
 			lines => [
-				$listen ? { '' => '', default => join(regsubst($listen, '^(.*)$', 'Listen \1', 'G'), "\n") },
-				$server ? { '' => '', default => join(regsubst($server, '^(.*)$', 'Server \1', 'G'), "\n") },
+				$listen ? { '' => '', default => regsubst($listen, '^(.*)$', 'Listen \1', 'G') },
+				$server ? { '' => '', default => regsubst($server, '^(.*)$', 'Server \1', 'G') },
 				$ttl ? { '' => '', default => "TimeToLive ${ttl}" },
 				$forward ? { '' => '', default => "Forward ${forward}" },
 				$cache_flush ? { '' => '', default => "CacheFlush ${cache_flush}" }
