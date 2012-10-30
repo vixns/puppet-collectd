@@ -20,7 +20,7 @@ define collectd::plugin($lines = "", $content = "", $source = "") {
 	}
 
 	if ($lines != "") {
-		$pluginlines = join("\n\t", $lines)
+		$pluginlines = join($lines, "\n\t")
 		File["collectd ${name} config"] {
 			content => "LoadPlugin ${name}\n<Plugin ${name}>\n\t${pluginlines}\n</Plugin>\n",
 		}
