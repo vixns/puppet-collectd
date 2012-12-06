@@ -6,11 +6,11 @@
 # node.
 #
 # Parameters:
-#   namevar	- the lowest loglevel which should be sent to syslog
+#   namevar  - the lowest loglevel which should be sent to syslog
 define collectd::syslog() {
-	collectd::plugin {
-		'syslog':
-			lines => [ "LogLevel ${name}" ]
-	}
+  collectd::plugin {
+    'syslog':
+      lines => [ "LogLevel ${name}" ]
+  }
 }
 
