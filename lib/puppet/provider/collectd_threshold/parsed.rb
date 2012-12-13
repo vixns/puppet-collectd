@@ -98,7 +98,7 @@ Puppet::Type.type(:collectd_threshold).provide(:parsed,
 	# resources
 	def self.instances
 		prefetch()
-		@records.find_all { |r| [:plugin_start, :parased].include?(r[:record_type]) }.collect { |r| new(r) }
+		@records.find_all { |r| [:plugin_start, :parsed].include?(r[:record_type]) }.collect { |r| new(r) }
 	end
 
 	

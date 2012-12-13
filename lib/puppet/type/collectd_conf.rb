@@ -6,7 +6,7 @@ Puppet::Type.newtype(:collectd_conf) do
 
 	ensurable
 
-	newparam(:key) do
+	newparam(:name) do
 		desc "The name of the configuration key"
 		isnamevar
 	end
