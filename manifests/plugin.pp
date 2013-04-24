@@ -12,7 +12,7 @@
 #   content - optional plugin configuration, for cases where an array of lines
 #             would be insuffiscent.
 #   source  - same as content, but specify a puppet file source instead.
-define collectd::plugin($lines = '', $content = '', $source = '') {
+define collectd::plugin($carbon = '', $lines = '', $content = '', $source = '') {
 
   file { "collectd ${name} config":
     path   => "/var/lib/puppet/modules/collectd/plugins/${name}.conf",
@@ -20,6 +20,13 @@ define collectd::plugin($lines = '', $content = '', $source = '') {
     owner  => root,
     group  => 0,
     notify => Service['collectd'];
+  }
+
+  if ($carbon != '') {
+    $pluginlines = join($carbon, "\n\t")
+    File["collectd ${name} config"] {
+      content => "LoadPlugin ${name}\n<Plugin ${name}>\n\t<Carbon>\n\t${pluginlines}\n</Carbon>\n</Plugin>\n",
+    }
   }
 
   if ($lines != '') {
